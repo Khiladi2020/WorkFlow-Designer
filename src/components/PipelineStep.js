@@ -3,15 +3,19 @@ import { Box, Typography } from "@material-ui/core";
 import Draggable from "react-draggable";
 
 const PipelineStep = ({ title, ...props }) => {
-  const connectionPointRef = useRef(null);
+  const incomingConnRef = useRef(null);
+  const outgoingConnRef = useRef(null)
 
-  const handleMouseDown = (e) => {
+  const handleOutgoingMouseDown = (e) => {
     console.log(e.clientX, " ", e.clientY);
+    let { x, y } = outgoingConnRef.current.getBoundingClientRect();
+    props.onConnStart(props.id,{x,y})
   };
 
-  const handleMouseUp = (e) => {
-    console.log("End Position");
+  const handleIncomingMouseDown = (e) => {
+    console.log("End Position: Mouse Up",props.id);
     console.log(e.clientX, " ", e.clientY);
+    props.onConnEnd(props.id)
   };
 
   return (
@@ -21,43 +25,44 @@ const PipelineStep = ({ title, ...props }) => {
       position={null}
       grid={[25, 25]}
       scale={1}
-      onStart={()=> {
-        let {x,y} = connectionPointRef.current.getBoundingClientRect()
-        props.onDragStart({x,y})
-        }
-      }
+      onStart={() => {
+        let { x, y } = outgoingConnRef.current.getBoundingClientRect();
+        // props.onDragStart({ x, y });
+      }}
       onDrag={(e) => {
         // console.log('drag elem',e)
-        let {x,y} = connectionPointRef.current.getBoundingClientRect()
-        props.onDragMove({x,y})
+        let { x, y } = outgoingConnRef.current.getBoundingClientRect();
+        // props.onDragMove({ x, y });
       }}
     >
-      <Box
-        height={100}
-        width={100}
-        bgcolor="red"
-        color="white"
-        display="flex"
-        alignItems="center"
-        margin={2}
-        className="drag"
-      >
+      <Box display="flex" alignItems="center" className="pipeline-step">
         <Box
           className="incoming-connection"
-          onMouseDown={handleMouseDown}
-          onMouseUp={handleMouseUp}
+          onMouseDown={handleIncomingMouseDown}
           height={8}
           width={8}
-          ref={connectionPointRef}
           bgcolor="black"
+          ref={incomingConnRef}
         ></Box>
-        <Box flexGrow={1}>
-          <Typography align="center">{title}</Typography>
+        <Box
+          height={100}
+          width={100}
+          bgcolor="red"
+          color="white"
+          display="flex"
+          alignItems="center"
+          className="drag"
+        >
+          <Box flexGrow={1}>
+            <Typography align="center">{title}</Typography>
+          </Box>
         </Box>
         <Box
           className="outgoing-connection"
+          onMouseDown={handleOutgoingMouseDown}
           height={8}
           width={8}
+          ref={outgoingConnRef}
           bgcolor="black"
         ></Box>
       </Box>
