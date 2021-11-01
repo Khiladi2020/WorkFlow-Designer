@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect,  useState } from "react";
 
 const PipelineConnection = ({ x1, y1, x2, y2 }) => {
   console.log("Mounted");
@@ -11,18 +11,15 @@ const PipelineConnection = ({ x1, y1, x2, y2 }) => {
 
     return line.join(" ");
   };
-  const pathRef = useRef(null);
+  const [d, setD] = useState('')
   useEffect(() => {
-    // if(pathRef) {
-    //   pathRef.current.d = curvedHorizontal(x1, y1, x2, y2);
-    // }
-    console.log("pipe", x1, y1, x2, y2);
-  }, [x1, y1, x2, y2, pathRef]);
+    setD(curvedHorizontal(x1, y1, x2, y2));
+  }, [x1, y1, x2, y2]);
   return (
     <div className="pipeline-connection">
       <svg>
-        {/* <path ref={pathRef} stroke="black" stroke-width="2" fill="none" id="path" d="M 5 5 C 200 5 181 209 357 209"></path> */}
-        <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="dodgerblue" />
+        <path stroke="black" stroke-width="2" fill="none" d={d} ></path>
+        {/* <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="dodgerblue" /> */}
       </svg>
     </div>
   );

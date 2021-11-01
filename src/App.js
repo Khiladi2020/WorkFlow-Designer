@@ -11,6 +11,7 @@ const inititalSteps = [
     // {
     //     id: "1s",
     //     title: "Step1",
+            
     // },
     // {
     //     id: "2s",
@@ -208,15 +209,11 @@ function App() {
                     Add Step
                 </Button>
             </div>
-            <div className="pipeline-view">
-                <div
-                    ref={pipeLineContainerRef}
-                    className="pipeline-steps-container"
+            <div className="pipeline-view"  ref={pipeLineContainerRef}
                     onMouseDown={onPipelineStepsContainerDown}
                     onMouseMove={onPipelineStepsContainerMove}
-                    onMouseUp={onPipelineStepsContainerUp}
-                >
-                    <div className="steps">{stepComponents}</div>
+                    onMouseUp={onPipelineStepsContainerUp}>
+               <div className="steps">{stepComponents}</div>
                     <div className="connections">
                         {connectionComponents}
                         {connection.active && (
@@ -228,7 +225,6 @@ function App() {
                             />
                         )}
                     </div>
-                </div>
             </div>
         </div>
     );
