@@ -98,6 +98,7 @@ function App() {
             x2: pos.x,
             y2: pos.y,
             startNode: outgoingNode,
+            active: true,
         });
         console.log("This is start of connection");
 
@@ -108,19 +109,28 @@ function App() {
         }));
     };
 
+    const checkDuplicateConnection = (conn) => {
+        return state.connections.some(
+            (val) =>
+                val.startNode === conn.startNode && val.endNode === conn.endNode
+        );
+    };
+
     const connectionComplete = (endNode) => {
         // this function adds the completed connection to the main state
-        if (true) {
+        if (connection.active) {
             console.log("adding new connection");
             let newConnection = {
                 ...connection,
                 id: `${state.connections.length + 1}c`,
                 endNode: endNode,
             };
-            setState((prev) => ({
-                ...prev,
-                connections: prev.connections.concat(newConnection),
-            }));
+            if (!checkDuplicateConnection(newConnection))
+                setState((prev) => ({
+                    ...prev,
+                    connections: prev.connections.concat(newConnection),
+                }));
+            else alert("Duplicate Connections are not allowed");
         }
     };
 
