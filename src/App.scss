@@ -3,6 +3,7 @@ body {
 }
 .pipeline-view {
     position: relative;
+    overflow: hidden;
     height: 500px;
     background-color: rgba(128, 128, 128, 0.281);
 }
@@ -27,12 +28,12 @@ body {
     margin: 10px 0;
 }
 
-.pipeline-step{
-  display: inline-block;
-  cursor: pointer;
-  user-select: none;
+.pipeline-step {
+    cursor: pointer;
+    user-select: none;
 }
 
-.incoming-connection:hover, .outgoing-connection:hover{
-  background-color: grey;
+.incoming-connection:hover,
+.outgoing-connection:hover {
+    background-color: grey;
 }
