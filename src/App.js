@@ -109,6 +109,7 @@ function App() {
         }));
     };
 
+    // connection checks
     const checkDuplicateConnection = (conn) => {
         return state.connections.some(
             (val) =>
@@ -116,21 +117,34 @@ function App() {
         );
     };
 
+    const checkSelfConnection = (conn) => {
+        return conn.startNode === conn.endNode;
+    };
+
     const connectionComplete = (endNode) => {
         // this function adds the completed connection to the main state
         if (connection.active) {
-            console.log("adding new connection");
+            let isValid = true;
             let newConnection = {
                 ...connection,
                 id: `${state.connections.length + 1}c`,
                 endNode: endNode,
             };
-            if (!checkDuplicateConnection(newConnection))
+            if (checkDuplicateConnection(newConnection)) {
+                isValid = false;
+                alert("Duplicate Connections are not allowed");
+            } else if (checkSelfConnection(newConnection)) {
+                isValid = false;
+                alert("Self Connections are not allowed");
+            }
+
+            if (isValid) {
+                console.log("adding new connection");
                 setState((prev) => ({
                     ...prev,
                     connections: prev.connections.concat(newConnection),
                 }));
-            else alert("Duplicate Connections are not allowed");
+            }
         }
     };
 
