@@ -162,6 +162,8 @@ function WorkFlowDesigner(props) {
                 onConnStart={connectionStart}
                 onConnEnd={connectionComplete}
                 onStepDrag={updateConnectionsOnStepMove}
+                readOnly={props.readOnly ? props.readOnly : false}
+                displayComponent={props.stepComponent}
             />
         );
     });
@@ -186,15 +188,17 @@ function WorkFlowDesigner(props) {
 
     return (
         <div className="app">
-            <div className="pipeline-actions">
-                <Button
-                    variant="contained"
-                    onClick={addNewStep}
-                    color="primary"
-                >
-                    Add Step
-                </Button>
-            </div>
+            {!props.readOnly && (
+                <div className="pipeline-actions">
+                    <Button
+                        variant="contained"
+                        onClick={addNewStep}
+                        color="primary"
+                    >
+                        Add Step
+                    </Button>
+                </div>
+            )}
             <div
                 className="pipeline-view"
                 ref={pipeLineContainerRef}

@@ -5,7 +5,7 @@ body {
     position: relative;
     overflow: hidden;
     height: 500px;
-    background-color: rgba(128, 128, 128, 0.281);
+    background-color: rgba(128, 128, 128, 0.082);
 }
 .connections {
     position: absolute;
@@ -31,6 +31,7 @@ body {
 .pipeline-step {
     cursor: pointer;
     user-select: none;
+    position: absolute;
 }
 
 .incoming-connection:hover,

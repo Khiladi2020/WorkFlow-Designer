@@ -3,6 +3,7 @@ import "./App.scss";
 import { useState } from "react";
 
 import WorkFlowDesigner from "./components/WorkFlowDesigner";
+import { Box,Typography } from "@material-ui/core";
 
 const inititalSteps = [
     // {
@@ -35,6 +36,20 @@ const initialState = {
     newConnection: undefined,
     steps: inititalSteps,
     connections: initialConnections,
+    readOnly: false,
+};
+
+const StepComponent = (props) => {
+    return (
+        <Box flexGrow={1} display="flex" flexDirection="column">
+            <Box flexGrow={1} display="flex" justifyContent="center" alignItems="center">
+                <Typography align="center">{props.title}</Typography>
+            </Box>
+            <Box bgcolor="#E0E0E0">
+                <Typography align="center">Ready</Typography>
+            </Box>
+        </Box>
+    );
 };
 
 function App() {
@@ -62,6 +77,8 @@ function App() {
                 onAddStep={handleAddStep}
                 onAddConnection={handleAddConnection}
                 onUpdateConnections={handleUpdateConnections}
+                readOnly={state.readOnly}
+                // stepComponent={StepComponent}
             />
         </div>
     );

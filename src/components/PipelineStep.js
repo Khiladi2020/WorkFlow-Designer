@@ -2,17 +2,40 @@ import { useRef } from "react";
 import { Box, Typography } from "@material-ui/core";
 import Draggable from "react-draggable";
 
-const PipelineStep = ({ title, ...props }) => {
+const DefaultDisplayComponent = (props) => {
+    return (
+        <Box flexGrow={1} display="flex" alignItems="center" justifyContent="center">
+            <Typography align="center">{props.title}</Typography>
+        </Box>
+    );
+};
+
+const PipelineStep = (props) => {
     const incomingConnRef = useRef(null);
     const outgoingConnRef = useRef(null);
 
+    const connectorBoxSize = props.connectorBoxSize || 10;
+    const connOffset = connectorBoxSize / 2;
+
+    const DisplayComponent = props.displayComponent
+        ? props.displayComponent
+        : DefaultDisplayComponent;
+
     const handleOutgoingMouseDown = (e) => {
+        if (props.readOnly) {
+            console.log("aborting connection start, ReadOnly Mode");
+            return;
+        }
         console.log(e.clientX, " ", e.clientY);
         let { x, y } = outgoingConnRef.current.getBoundingClientRect();
-        props.onConnStart(props.id, { x, y });
+        props.onConnStart(props.id, { x: x + connOffset, y: y + connOffset });
     };
 
     const handleIncomingMouseDown = (e) => {
+        if (props.readOnly) {
+            console.log("aborting connection end, ReadOnly Mode");
+            return;
+        }
         console.log("End Position: Mouse Up", props.id);
         console.log(e.clientX, " ", e.clientY);
         props.onConnEnd(props.id);
@@ -22,12 +45,16 @@ const PipelineStep = ({ title, ...props }) => {
         console.log("Step is being dragged, Id:", props.id);
         let positionIn = incomingConnRef.current.getBoundingClientRect();
         let positionOut = outgoingConnRef.current.getBoundingClientRect();
+        // this variable make the connection in center of the connector box
+
         props.onStepDrag(
             props.id,
-            { x: positionIn.x, y: positionIn.y },
-            { x: positionOut.x, y: positionOut.y }
+            { x: positionIn.x + connOffset, y: positionIn.y + connOffset },
+            { x: positionOut.x + connOffset, y: positionOut.y + connOffset }
         );
     };
+
+    console.log(props.displayComponent);
 
     return (
         <Draggable
@@ -36,6 +63,7 @@ const PipelineStep = ({ title, ...props }) => {
             position={null}
             grid={[25, 25]}
             scale={1}
+            disabled={props.readOnly}
             onStart={() => {
                 handleStepDrag();
                 // let { x, y } = outgoingConnRef.current.getBoundingClientRect();
@@ -53,31 +81,39 @@ const PipelineStep = ({ title, ...props }) => {
                 <Box
                     className="incoming-connection"
                     onMouseDown={handleIncomingMouseDown}
-                    height={8}
-                    width={8}
+                    height={connectorBoxSize}
+                    width={connectorBoxSize}
                     bgcolor="black"
                     ref={incomingConnRef}
+                    borderRadius="50%"
+                    sx={{
+                        transform: `translateX(${connectorBoxSize / 2}px)`,
+                    }}
                 ></Box>
                 <Box
                     height={100}
-                    width={100}
-                    bgcolor="red"
-                    color="white"
+                    width={150}
+                    bgcolor="white"
+                    color="black"
                     display="flex"
-                    alignItems="center"
                     className="drag"
+                    border="1px solid grey"
+                    borderRadius="10px"
+                    overflow="hidden"
                 >
-                    <Box flexGrow={1}>
-                        <Typography align="center">{title}</Typography>
-                    </Box>
+                    <DisplayComponent {...props} />
                 </Box>
                 <Box
                     className="outgoing-connection"
                     onMouseDown={handleOutgoingMouseDown}
-                    height={8}
-                    width={8}
+                    height={connectorBoxSize}
+                    width={connectorBoxSize}
                     ref={outgoingConnRef}
                     bgcolor="black"
+                    borderRadius="50%"
+                    sx={{
+                        transform: `translateX(${-connectorBoxSize / 2}px)`,
+                    }}
                 ></Box>
             </Box>
         </Draggable>
