@@ -18,7 +18,26 @@ const PipelineConnection = ({ x1, y1, x2, y2 }) => {
     return (
         <div className="pipeline-connection">
             <svg>
-                <path stroke="black" stroke-width="2" fill="none" d={d}></path>
+                <defs>
+                    <marker
+                        id="pipeline-connection-arrowhead"
+                        markerWidth="10"
+                        markerHeight="7"
+                        refX="8"
+                        refY="3.5"
+                        orient="auto"
+                    >
+                        <polygon points="0 0, 8 3.5, 0 7" />
+                    </marker>
+                </defs>
+                <path
+                    stroke="black"
+                    stroke-width="2"
+                    fill="none"
+                    d={d}
+                    marker-end="url(#pipeline-connection-arrowhead)"
+                ></path>
+
                 {/* <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="dodgerblue" /> */}
             </svg>
         </div>

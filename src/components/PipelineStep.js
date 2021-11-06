@@ -4,7 +4,12 @@ import Draggable from "react-draggable";
 
 const DefaultDisplayComponent = (props) => {
     return (
-        <Box flexGrow={1} display="flex" alignItems="center" justifyContent="center">
+        <Box
+            flexGrow={1}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+        >
             <Typography align="center">{props.title}</Typography>
         </Box>
     );
@@ -13,6 +18,7 @@ const DefaultDisplayComponent = (props) => {
 const PipelineStep = (props) => {
     const incomingConnRef = useRef(null);
     const outgoingConnRef = useRef(null);
+    const stepRef = useRef(null);
 
     const connectorBoxSize = props.connectorBoxSize || 10;
     const connOffset = connectorBoxSize / 2;
@@ -54,18 +60,25 @@ const PipelineStep = (props) => {
         );
     };
 
+    const handleUpdateStepPosition = () => {
+        const stepCurrPos = stepRef.current.getBoundingClientRect();
+
+        props.onUpdateStepPos(props.id, { x: stepCurrPos.x, y: stepCurrPos.y });
+    };
+
     console.log(props.displayComponent);
 
     return (
         <Draggable
             handle=".drag"
-            defaultPosition={{ x: 0, y: 0 }}
+            defaultPosition={{ x: props.pos.x, y: props.pos.y }}
             position={null}
             grid={[25, 25]}
             scale={1}
             disabled={props.readOnly}
             onStart={() => {
                 handleStepDrag();
+                handleUpdateStepPosition();
                 // let { x, y } = outgoingConnRef.current.getBoundingClientRect();
                 // props.onDragStart({ x, y });
             }}
@@ -73,11 +86,20 @@ const PipelineStep = (props) => {
                 // console.log('drag elem',e)
                 // let { x, y } = outgoingConnRef.current.getBoundingClientRect();
                 handleStepDrag();
+                handleUpdateStepPosition();
                 // props.onDragMove({ x, y });
             }}
-            onStop={handleStepDrag}
+            onStop={() => {
+                handleStepDrag();
+                handleUpdateStepPosition();
+            }}
         >
-            <Box display="flex" alignItems="center" className="pipeline-step">
+            <Box
+                display="flex"
+                alignItems="center"
+                className="pipeline-step"
+                ref={stepRef}
+            >
                 <Box
                     className="incoming-connection"
                     onMouseDown={handleIncomingMouseDown}

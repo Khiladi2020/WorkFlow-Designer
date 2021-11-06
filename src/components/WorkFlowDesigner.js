@@ -111,6 +111,18 @@ function WorkFlowDesigner(props) {
         props.onUpdateConnections(newConnections);
     };
 
+    const updateStepPosition = (id, newPos) => {
+        newPos = resolveOffsets(newPos);
+
+        let newSteps = props.designerState.steps.map((value) => {
+            let val = Object.assign({}, value);
+            if (val.id === id) val.pos = newPos;
+
+            return val;
+        });
+        props.onUpdateStepPos(newSteps)
+    };
+
     const onPipelineStepsContainerDown = (e) => {
         // this function tracks the mouse movement on the container
         console.log("Pipe Holder: Mouse Down", e.clientX, e.clientY);
@@ -159,9 +171,11 @@ function WorkFlowDesigner(props) {
                 key={index}
                 title={step.title}
                 id={step.id}
+                pos={step.pos}
                 onConnStart={connectionStart}
                 onConnEnd={connectionComplete}
                 onStepDrag={updateConnectionsOnStepMove}
+                onUpdateStepPos={updateStepPosition}
                 readOnly={props.readOnly ? props.readOnly : false}
                 displayComponent={props.stepComponent}
             />
@@ -182,6 +196,10 @@ function WorkFlowDesigner(props) {
         let newStep = {
             id: `${props.designerState.steps.length + 1}s`,
             title: stepName,
+            pos: {
+                x: 0,
+                y: 0,
+            },
         };
         props.onAddStep(newStep);
     };
