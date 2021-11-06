@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 
 const PipelineConnection = ({ x1, y1, x2, y2 }) => {
-    console.log("Mounted");
-    const curvedHorizontal = function (x1, y1, x2, y2) {
-        let line = [];
-        let mx = x1 + (x2 - x1) / 2;
+  console.log("Mounted");
+  const curvedHorizontal = function (x1, y1, x2, y2) {
+    let line = [];
+    let mx = x1 + (x2 - x1) / 2;
 
-        line.push("M", x1, y1);
-        line.push("C", mx, y1, mx, y2, x2, y2);
+    line.push("M", x1, y1);
+    line.push("C", mx, y1, mx, y2, x2, y2);
 
         return line.join(" ");
     };
