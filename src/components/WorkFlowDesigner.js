@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import { Button } from "@material-ui/core";
 
+import "./WorkFlowDesigner.css"
 import PipelineStep from "./PipelineStep";
 import PipelineConnection from "./PipelineConnection";
 
