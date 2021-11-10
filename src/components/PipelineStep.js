@@ -1,6 +1,19 @@
 import { useRef } from "react";
 import { Box, Typography } from "@material-ui/core";
+import { makeStyles } from '@material-ui/core/styles';
 import Draggable from "react-draggable";
+
+const useStyles = makeStyles( theme => ({
+    pointer:{
+        cursor:"pointer",
+        userSelect:"none"
+    },
+    connectionPoints:{
+        '&:hover':{
+            backgroundColor:"grey"
+        }
+    }
+}))
 
 const DefaultDisplayComponent = (props) => {
     return (
@@ -16,6 +29,7 @@ const DefaultDisplayComponent = (props) => {
 };
 
 const PipelineStep = (props) => {
+    const classes = useStyles()
     const incomingConnRef = useRef(null);
     const outgoingConnRef = useRef(null);
     const stepRef = useRef(null);
@@ -79,15 +93,10 @@ const PipelineStep = (props) => {
             onStart={() => {
                 handleStepDrag();
                 handleUpdateStepPosition();
-                // let { x, y } = outgoingConnRef.current.getBoundingClientRect();
-                // props.onDragStart({ x, y });
             }}
             onDrag={(e) => {
-                // console.log('drag elem',e)
-                // let { x, y } = outgoingConnRef.current.getBoundingClientRect();
                 handleStepDrag();
                 handleUpdateStepPosition();
-                // props.onDragMove({ x, y });
             }}
             onStop={() => {
                 handleStepDrag();
@@ -97,11 +106,12 @@ const PipelineStep = (props) => {
             <Box
                 display="flex"
                 alignItems="center"
-                className="pipeline-step"
+                className={["pipeline-step",classes.pointer]}
+                position="absolute"
                 ref={stepRef}
             >
                 <Box
-                    className="incoming-connection"
+                    className={["incoming-connection",classes.connectionPoints]}
                     onMouseDown={handleIncomingMouseDown}
                     height={connectorBoxSize}
                     width={connectorBoxSize}
@@ -126,7 +136,7 @@ const PipelineStep = (props) => {
                     <DisplayComponent {...props} />
                 </Box>
                 <Box
-                    className="outgoing-connection"
+                    className={["outgoing-connection",classes.connectionPoints]}
                     onMouseDown={handleOutgoingMouseDown}
                     height={connectorBoxSize}
                     width={connectorBoxSize}

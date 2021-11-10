@@ -1,12 +1,19 @@
 import { useRef, useEffect, useState } from "react";
-import { Button } from "@material-ui/core";
+import { Box, Button } from "@material-ui/core";
+import { makeStyles } from '@material-ui/core/styles';
 
-import "./WorkFlowDesigner.css"
 import PipelineStep from "./PipelineStep";
 import PipelineConnection from "./PipelineConnection";
 
+const useStyles = makeStyles( theme => ({
+    noPointerEvents:{
+        pointerEvents:"none"
+    }
+}))
+
 function WorkFlowDesigner(props) {
     // pipeline
+    const classes = useStyles()
     const [offsets, setOffsets] = useState({});
     const pipeLineContainerRef = useRef(null);
 
@@ -121,7 +128,7 @@ function WorkFlowDesigner(props) {
 
             return val;
         });
-        props.onUpdateStepPos(newSteps)
+        props.onUpdateStepPos(newSteps);
     };
 
     const onPipelineStepsContainerDown = (e) => {
@@ -134,24 +141,11 @@ function WorkFlowDesigner(props) {
                 ...prev,
                 active: false,
             }));
-        // console.log("Down",e.clientX,e.clientY)
-
-        // setState((prev) => {
-        //     return {
-        //         ...prev,
-        //         eventVars: {
-        //             ...prev.eventVars,
-        //             mouseX: e.mouseClientX,
-        //             mouseY: e.mouseClientY,
-        //         },
-        //     };
-        // });
     };
 
     const onPipelineStepsContainerMove = (e) => {
-        // console.log("Move", e.clientX, e.clientY);
         let pos = resolveOffsets({ x: e.clientX, y: e.clientY });
-        // console.log('Move After',pos)
+        
         if (connection.active) {
             setConnection((prev) => ({
                 ...prev,
@@ -208,7 +202,12 @@ function WorkFlowDesigner(props) {
     return (
         <div className="app">
             {!props.readOnly && (
-                <div className="pipeline-actions">
+                <Box
+                    className="pipeline-actions"
+                    display="flex"
+                    justifyContent="center"
+                    my={1}
+                >
                     <Button
                         variant="contained"
                         onClick={addNewStep}
@@ -216,17 +215,29 @@ function WorkFlowDesigner(props) {
                     >
                         Add Step
                     </Button>
-                </div>
+                </Box>
             )}
-            <div
+            <Box
                 className="pipeline-view"
+                position="relative"
+                height={500}
+                bgcolor="rgba(128, 128, 128, 0.082)"
+                overflow="hidden"
                 ref={pipeLineContainerRef}
                 onMouseDown={onPipelineStepsContainerDown}
                 onMouseMove={onPipelineStepsContainerMove}
                 onMouseUp={onPipelineStepsContainerUp}
             >
-                <div className="steps">{stepComponents}</div>
-                <div className="connections">
+                <Box className="steps">{stepComponents}</Box>
+                <Box
+                    className={["connections",classes.noPointerEvents]}
+                    zIndex={10}
+                    position="absolute"
+                    top={0}
+                    left={0}
+                    height="100%"
+                    width="100%"
+                >
                     {connectionComponents}
                     {connection.active && (
                         <PipelineConnection
@@ -236,8 +247,8 @@ function WorkFlowDesigner(props) {
                             y2={connection.y2}
                         />
                     )}
-                </div>
-            </div>
+                </Box>
+            </Box>
         </div>
     );
 }
