@@ -1,19 +1,20 @@
+import React from "react";
 import { useRef, useEffect, useState } from "react";
 import { Box, Button } from "@material-ui/core";
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from "@material-ui/core/styles";
 
 import PipelineStep from "./PipelineStep";
 import PipelineConnection from "./PipelineConnection";
 
-const useStyles = makeStyles( theme => ({
-    noPointerEvents:{
-        pointerEvents:"none"
-    }
-}))
+const useStyles = makeStyles((theme) => ({
+    noPointerEvents: {
+        pointerEvents: "none",
+    },
+}));
 
 function WorkFlowDesigner(props) {
     // pipeline
-    const classes = useStyles()
+    const classes = useStyles();
     const [offsets, setOffsets] = useState({});
     const pipeLineContainerRef = useRef(null);
 
@@ -37,7 +38,11 @@ function WorkFlowDesigner(props) {
         // this function subtracts the offsets from mouse pointer position
         // as container might not be at top:0 left:0 position always so this function
         // subtracts the space btw page top and container top and same for left side
-        return { x: pos.x - offsets.x, y: pos.y - offsets.y };
+        // return { x: pos.x - offsets.x, y: pos.y - offsets.y };
+        console.log("Updating Offsets");
+        const coords = pipeLineContainerRef.current.getBoundingClientRect();
+        // setOffsets({ x: coords.x, y: coords.y });
+        return { x: pos.x - coords.x, y: pos.y - coords.y };
     };
 
     const connectionStart = (outgoingNode, pos) => {
@@ -98,10 +103,10 @@ function WorkFlowDesigner(props) {
     };
 
     const updateConnectionsOnStepMove = (id, incomingPos, outgoingPos) => {
-        console.log("Before Offsets", incomingPos, outgoingPos);
+        // console.log('Before Offsets', incomingPos, outgoingPos);
         incomingPos = resolveOffsets(incomingPos);
         outgoingPos = resolveOffsets(outgoingPos);
-        console.log("After Offsets", incomingPos, outgoingPos);
+        // console.log('After Offsets', incomingPos, outgoingPos);
         let newConnections = props.designerState.connections.map((value) => {
             let val = Object.assign({}, value);
 
@@ -133,7 +138,7 @@ function WorkFlowDesigner(props) {
 
     const onPipelineStepsContainerDown = (e) => {
         // this function tracks the mouse movement on the container
-        console.log("Pipe Holder: Mouse Down", e.clientX, e.clientY);
+        // console.log("Pipe Holder: Mouse Down", e.clientX, e.clientY);
 
         // disabling active state of connection on click
         if (connection.active)
@@ -145,7 +150,7 @@ function WorkFlowDesigner(props) {
 
     const onPipelineStepsContainerMove = (e) => {
         let pos = resolveOffsets({ x: e.clientX, y: e.clientY });
-        
+
         if (connection.active) {
             setConnection((prev) => ({
                 ...prev,
@@ -167,6 +172,7 @@ function WorkFlowDesigner(props) {
                 title={step.title}
                 id={step.id}
                 pos={step.pos}
+                icon={step.icon}
                 onConnStart={connectionStart}
                 onConnEnd={connectionComplete}
                 onStepDrag={updateConnectionsOnStepMove}
@@ -200,7 +206,7 @@ function WorkFlowDesigner(props) {
     };
 
     return (
-        <div className="app">
+        <div className="app1">
             {!props.readOnly && (
                 <Box
                     className="pipeline-actions"
@@ -230,7 +236,7 @@ function WorkFlowDesigner(props) {
             >
                 <Box className="steps">{stepComponents}</Box>
                 <Box
-                    className={["connections",classes.noPointerEvents]}
+                    className={["connections", classes.noPointerEvents]}
                     zIndex={10}
                     position="absolute"
                     top={0}

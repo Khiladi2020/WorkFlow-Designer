@@ -1,3 +1,4 @@
+import React from 'react'
 import { useRef } from "react";
 import { Box, Typography } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
@@ -22,6 +23,11 @@ const DefaultDisplayComponent = (props) => {
             display="flex"
             alignItems="center"
             justifyContent="center"
+            height="100px"
+            width="150px"
+            bgcolor="white"
+            border="1px solid grey"
+            borderRadius="10px"
         >
             <Typography align="center">{props.title}</Typography>
         </Box>
@@ -56,13 +62,13 @@ const PipelineStep = (props) => {
             console.log("aborting connection end, ReadOnly Mode");
             return;
         }
-        console.log("End Position: Mouse Up", props.id);
-        console.log(e.clientX, " ", e.clientY);
+        // console.log("End Position: Mouse Up", props.id);
+        // console.log(e.clientX, " ", e.clientY);
         props.onConnEnd(props.id);
     };
 
     const handleStepDrag = () => {
-        console.log("Step is being dragged, Id:", props.id);
+        // console.log("Step is being dragged, Id:", props.id);
         let positionIn = incomingConnRef.current.getBoundingClientRect();
         let positionOut = outgoingConnRef.current.getBoundingClientRect();
         // this variable make the connection in center of the connector box
@@ -80,7 +86,7 @@ const PipelineStep = (props) => {
         props.onUpdateStepPos(props.id, { x: stepCurrPos.x, y: stepCurrPos.y });
     };
 
-    console.log(props.displayComponent);
+    // console.log(props.displayComponent);
 
     return (
         <Draggable
@@ -89,7 +95,7 @@ const PipelineStep = (props) => {
             position={null}
             grid={[25, 25]}
             scale={1}
-            disabled={props.readOnly}
+            // disabled={props.readOnly}
             onStart={() => {
                 handleStepDrag();
                 handleUpdateStepPosition();
@@ -123,14 +129,9 @@ const PipelineStep = (props) => {
                     }}
                 ></Box>
                 <Box
-                    height={100}
-                    width={150}
-                    bgcolor="white"
-                    color="black"
+                    bgcolor="transparent"
                     display="flex"
                     className="drag"
-                    border="1px solid grey"
-                    borderRadius="10px"
                     overflow="hidden"
                 >
                     <DisplayComponent {...props} />

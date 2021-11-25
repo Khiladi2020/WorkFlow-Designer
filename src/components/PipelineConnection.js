@@ -1,8 +1,9 @@
+import React from 'react'
 import { useEffect, useState } from "react";
 import { Box } from "@material-ui/core";
 
 const PipelineConnection = ({ x1, y1, x2, y2 }) => {
-    console.log("Mounted");
+    // console.log("Mounted");
     const curvedHorizontal = function (x1, y1, x2, y2) {
         let line = [];
         let mx = x1 + (x2 - x1) / 2;
